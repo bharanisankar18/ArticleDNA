@@ -1,0 +1,246 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/schibsted-grotesk';
+@import '@fontsource-variable/newsreader/opsz.css';
+
+/*
+ * ArticleDNA design tokens, taken from the logo: brand paper, ink and indigo.
+ * Serif (Newsreader) is reserved for words quoted from the article; everything Gemini writes is
+ * set in the sans (Schibsted Grotesk). That split is how the UI separates author from AI.
+ */
+@theme {
+  --font-sans: 'Schibsted Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader Variable', ui-serif, Georgia, serif;
+
+  --color-paper: #f4f3e2; /* panel background */
+  --color-sheet: #fbfaf3; /* cards */
+  --color-cream: #ecebcb; /* the logo's paper: tiles, chips, insets */
+  --color-cream-deep: #e2e0bb;
+  --color-line: #e2e0c4;
+  --color-line-strong: #cbc8a2;
+  --color-ink: #090d1a;
+  --color-ink-2: #3b3f4e;
+  --color-ink-3: #5f6276;
+  --color-indigo: #4d57e6;
+  --color-indigo-deep: #3540c2;
+  --color-indigo-wash: #e3e3f3;
+  --color-ok: #1d7552;
+  --color-ok-wash: #dcecd9;
+  --color-warn: #8a5a00;
+  --color-warn-wash: #f2e4bf;
+  --color-bad: #ad3427;
+  --color-bad-wash: #f3dccf;
+
+  /* evidence types */
+  --color-ev-empirical: #4d57e6;
+  --color-ev-example: #2b8665;
+  --color-ev-expert: #b37419;
+  --color-ev-author: #6a6e86;
+  --color-ev-unsupported: #c0442e;
+
+  --text-meta: 11.5px;
+  --text-meta--line-height: 1.4;
+  --text-small: 12.5px;
+  --text-small--line-height: 1.5;
+  --text-body: 13.5px;
+  --text-body--line-height: 1.55;
+  --text-quote: 14.5px;
+  --text-quote--line-height: 1.6;
+  --text-heading: 15px;
+  --text-heading--line-height: 1.3;
+  --text-lead: 16.5px;
+  --text-lead--line-height: 1.4;
+  --text-display: 20px;
+  --text-display--line-height: 1.22;
+
+  --radius-card: 14px;
+  --shadow-card: 0 1px 0 rgb(9 13 26 / 0.03), 0 1px 3px rgb(9 13 26 / 0.06);
+  --shadow-raised: 0 10px 30px -14px rgb(9 13 26 / 0.35), 0 1px 3px rgb(9 13 26 / 0.08);
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-width: 300px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: rgb(77 87 230 / 0.22);
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: default;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+}
+
+@layer components {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Expand / collapse without measuring heights. */
+  .collapsible {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 260ms var(--ease-soft);
+  }
+  .collapsible[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+  .collapsible > * {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* The analyzing mark: each text line is "read" in turn. */
+  .reading-line {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: read-line 2.6s var(--ease-soft) infinite;
+  }
+  @keyframes read-line {
+    0% {
+      transform: scaleX(0.12);
+      opacity: 0.35;
+    }
+    28%,
+    72% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleX(0.12);
+      opacity: 0.35;
+    }
+  }
+
+  .progress-track {
+    background: linear-gradient(90deg, transparent, var(--color-indigo), transparent) no-repeat;
+    background-size: 40% 100%;
+    animation: progress-sweep 1.6s ease-in-out infinite;
+  }
+  @keyframes progress-sweep {
+    from {
+      background-position: -60% 0;
+    }
+    to {
+      background-position: 160% 0;
+    }
+  }
+
+  .loader-pulse {
+    animation: loader-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes loader-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(77 87 230 / 0.45);
+    }
+    50% {
+      box-shadow: 0 0 0 5px rgb(77 87 230 / 0);
+    }
+  }
+
+  /* Loader: comet on the orbit, data flowing to the active section, a slow glow. */
+  .loader-orbit {
+    animation: loader-orbit 3.2s linear infinite;
+  }
+  @keyframes loader-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .loader-flow {
+    animation: loader-flow 0.9s linear infinite;
+  }
+  @keyframes loader-flow {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  .loader-breathe {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: loader-breathe 3s ease-in-out infinite;
+  }
+  @keyframes loader-breathe {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(0.94);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  }
+
+  /* One orchestrated reveal when diagrams arrive. */
+  .workflow-step {
+    animation: step-in 420ms var(--ease-soft) both;
+  }
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  .graph-reveal {
+    animation: fade-in 500ms var(--ease-soft);
+  }
+
+  .toast-enter {
+    animation: toast-in 220ms var(--ease-soft);
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  .fade-in {
+    animation: fade-in 260ms var(--ease-soft);
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-line,
+  .progress-track,
+  .toast-enter,
+  .fade-in,
+  .loader-pulse,
+  .loader-orbit,
+  .loader-flow,
+  .loader-breathe,
+  .workflow-step,
+  .graph-reveal {
+    animation: none;
+  }
+  .collapsible {
+    transition: none;
+  }
+}
