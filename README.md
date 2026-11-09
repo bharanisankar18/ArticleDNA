@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="brand/logo-lockup.svg" alt="ArticleDNA" height="96">
+  <img src="brand/logo-readme.svg" alt="ArticleDNA" width="360">
 </p>
 
 <h3 align="center">Understand the DNA behind every article.</h3>
@@ -37,30 +37,13 @@
 
 ## ✨ Features
 
-**🧬 Analyze.** A structured breakdown that adapts to what you're reading:
-
-| Research papers | Articles, news & blogs |
-| --- | --- |
-| Abstract · Methodology · Key findings · Research gap · Limitations · Future work | TL;DR · Key takeaways · Core concepts · Facts · Statistics · Quotes · Sources · Further reading |
-
-Followed by the **Main argument**, **Evidence** (with the kind and strength of support for each
-claim) and **Assumptions** (stated by the author or inferred).
-
-**🎯 Find in page.** Every point is written in plain words, with a button that scrolls the paper to
-the exact passage it's based on and highlights it. ArticleDNA never highlights a passage that only
-looks similar.
-
-**🕸️ Visualize.** A step-by-step **workflow** of the work and an interactive **knowledge graph** of
-its concepts and how they connect.
-
-**🛡️ Grounded.** Numbers, quotes and sources are only shown when they appear in the article itself.
-
-**📚 Saved & History.** Bookmark analyses, or reopen anything you've analyzed. Everything stays in
-your browser.
-
-**⚡ Always available.** Gemini first, then Groq, OpenRouter or a local Ollama model when it hits its
-limit, switched automatically.
-
+- 🧬 **Smart summary:** research structure for papers (Abstract → Future work), TL;DR to Further reading for articles
+- 🎯 **Find in page:** jump to and highlight the exact passage behind every point
+- 🔬 **Critical reading:** main argument, evidence strength, assumptions, limitations
+- 🕸️ **Visualize:** workflow diagram and interactive knowledge graph
+- 🛡️ **Grounded:** quotes, numbers and sources must appear in the article
+- 📚 **Saved & History:** stored only in your browser
+- ⚡ **Never stuck:** falls back from Gemini to Groq, OpenRouter or Ollama automatically
 ## 📸 Screenshots
 
 | Explore | Summary | Workflow | Knowledge graph |
@@ -80,32 +63,12 @@ limit, switched automatically.
 
 ## 🏗️ Architecture
 
-```mermaid
-flowchart LR
-    subgraph Browser["Chrome"]
-        Page["Article page"]
-        CS["Content script<br/>extract text · highlight passages"]
-        Panel["Side panel<br/>React app"]
-        Store[("chrome.storage<br/>Saved · History")]
-    end
-    subgraph Server["ArticleDNA backend (FastAPI)"]
-        API["/api/analyze<br/>/api/visualize"]
-        Router["Provider router<br/>fallback + cooldowns"]
-        Check["Grounding check<br/>quotes · numbers · sources"]
-    end
-    AI["Gemini → Groq → OpenRouter → Ollama"]
+<p align="center">
+  <img src="docs/architecture.svg" alt="ArticleDNA architecture" width="900">
+</p>
 
-    Page <--> CS
-    CS <--> Panel
-    Panel <--> Store
-    Panel -- "article text (on click)" --> API
-    API --> Router --> AI
-    AI --> Check --> Panel
-```
-
-The page is read in your browser. Text goes to the backend only when you click **Analyze** or
-**Visualize**, and API keys never leave the server.
-
+The page is read in your browser. Text reaches the server only when you click **Analyze** or
+**Visualize**, and API keys never leave it.
 ## 🚀 Getting started
 
 **1. Backend** (Python 3.11+)
