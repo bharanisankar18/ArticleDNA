@@ -32,8 +32,13 @@
 
 ## 🎬 Demo
 
-<!-- Replace the link below with your video (YouTube, Loom or a GitHub-hosted .mp4). -->
-**Demo video:** coming soon
+<p align="center">
+  <a href="https://youtu.be/mK-kIiYlz10">
+    <img src="https://img.youtube.com/vi/mK-kIiYlz10/hqdefault.jpg" alt="Watch the ArticleDNA demo on YouTube" width="720">
+  </a>
+  <br>
+  <a href="https://youtu.be/mK-kIiYlz10"><b>▶ Watch the demo on YouTube</b></a>
+</p>
 
 ## ✨ Features
 
