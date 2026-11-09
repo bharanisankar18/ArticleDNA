@@ -133,8 +133,12 @@ export function cleanAuthor(value: string | null | undefined): string | null {
   if (!cleaned || /^https?:\/\//.test(cleaned)) return null;
   // Dates, brackets and submission notes are not names.
   if (/[\d[\]{}|<>]|submitted|received|accepted|published|updated|copyright|©/i.test(cleaned)) return null;
-  const names = cleaned.split(/\s*(?:,|;|\band\b|&)\s*/i).filter(Boolean);
-  if (names.length > 3) cleaned = `${names.slice(0, 3).join(', ')} et al.`;
+  // Drop affiliation markers like "a", "b", "1" that sites print next to author names.
+  const names = cleaned
+    .split(/\s*(?:,|;|\band\b|&)\s*/i)
+    .filter((name) => (name.match(/\p{L}/gu)?.length ?? 0) >= 2);
+  if (!names.length) return null;
+  cleaned = names.length > 3 ? `${names.slice(0, 3).join(', ')} et al.` : names.join(', ');
   return cleaned.length > 160 ? null : cleaned;
 }
 

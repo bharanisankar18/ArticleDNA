@@ -80,6 +80,10 @@ describe('extractArticle', () => {
 });
 
 describe('cleanAuthor', () => {
+  it('ignores affiliation markers', () => {
+    expect(cleanAuthor('a')).toBeNull();
+    expect(cleanAuthor('Jiuxiang Gu, a, b')).toBe('Jiuxiang Gu');
+  });
   it('rejects bylines that are not names', () => {
     expect(cleanAuthor('[Submitted on 4 Feb 2025]')).toBeNull();
     expect(cleanAuthor('Published 12 March 2026')).toBeNull();
